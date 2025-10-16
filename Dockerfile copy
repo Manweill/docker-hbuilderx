@@ -8,11 +8,10 @@ WORKDIR /opt
 RUN set -eux; \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    wget \
-    tar \
-    zip \
+        ca-certificates \
+        curl \
+        wget \
+        tar \
         git \
         sudo \
         libglib2.0-0 \
@@ -23,7 +22,7 @@ RUN set -eux; \
 
 # 安装 nvm 和 Node.js
 ENV NVM_DIR=/usr/local/nvm
-ENV NODE_VERSION=20.19.0
+ENV NODE_VERSION=18.20.7
 
 RUN mkdir -p $NVM_DIR \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
@@ -34,12 +33,11 @@ RUN mkdir -p $NVM_DIR \
 
 
 
-# 复制并解压 HBuilderX
-COPY hbuilderx/HBuilderX.4.76.2025082103.linux_x64.full.tar.gz /usr/local/
-RUN cd /usr/local && \
-    tar -xzf HBuilderX.4.76.2025082103.linux_x64.full.tar.gz -C . && \
-    mv HBuilderX hbuilderx-linux && \
-    rm HBuilderX.4.76.2025082103.linux_x64.full.tar.gz
+# 使用构建上下文中的 tgz，ADD 会在目标自动解压（确保构建上下文包含 hbuilderx/hbuilderx-linux.3.98.tgz）
+ADD hbuilderx/hbuilderx-linux-3.98.tgz /usr/local/
+
+# 如果解压后目录名为 HBuilderX，则重命名为 hbuilderx-linux 以保持原先路径一致
+RUN if [ -d /usr/local/HBuilderX ] && [ ! -d /usr/local/hbuilderx-linux ]; then mv /usr/local/HBuilderX /usr/local/hbuilderx-linux; fi
 
 # 不创建非 root 用户，构建与运行均以 root 执行（测试阶段）
 
@@ -58,4 +56,4 @@ RUN npm install -g uapp && \
     uapp config hbx.dir /usr/local/hbuilderx-linux
 
 CMD ["bash"]
-    
+
