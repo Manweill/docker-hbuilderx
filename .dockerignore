@@ -1,0 +1,35 @@
+# Ignore node modules and build artifacts
+node_modules/
+dist/
+build/
+
+# Git
+.git/
+
+# Dockerfile related
+Dockerfile*
+
+# Logs and temp
+*.log
+tmp/
+
+# OS files
+.DS_Store
+
+# Ignore common IDE folders
+.vscode/
+.idea/
+
+# If you store large HBuilderX tarballs elsewhere, don't include them here unless you
+# want the build to use the local tarball. To force download, keep the tarball out of
+# the build context.
+
+# NOTE: If you want to use a local HBuilderX tarball with the Dockerfile's
+# `final-local` stage, place it at `hbuilderx/HBuilderX.tar.gz` in the project root
+# and DO NOT add `hbuilderx/` to this file. If you prefer forcing remote download,
+# you can add `hbuilderx/` here to exclude local tarballs from the build context.
+
+# By default ignore everything to keep build context small, but allow hbuilderx/ when present.
+*
+!hbuilderx/
+!hbuilderx/**
